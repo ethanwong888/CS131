@@ -1,0 +1,148 @@
+Statistics and Analysis from Multiple Tests on kenken and plain_kenken
+  (Test data at bottom of file)
+
+In order to test the speed at which kenken and plain_kenken run at, I used the
+  test cases provided at the bottom of the homework specification. Running the 
+  tests with the "statistics" keyword presented data detailing the efficiency 
+  and times for kenken and plain_kenken. 
+  (Note: For plain_kenken I was not able to test any boards with N > 4, as any 
+    values of N greater than 4 caused the computation to take forever so I 
+    had to abort them.)
+
+The overall conclusion is -- kenken operates much faster than plain_kenken, 
+  which was to be expected. plain_kenken had significantly worse performance
+  based on the "user time" and "cpu time" it took for each predicate to 
+  finish. For instance, in Test #1 kenken took 0.006 seconds to finish in user 
+  time, and 0.009 seconds to finish in cpu time. I tried to run a similar 
+  test case using an identical board and, and plain_kenken did not ever finish 
+  running (hence why you see no data for it). I am not entirely sure if this 
+  was because of a hardware issue due to my laptop being really old, but my 
+  guess is that it just takes forever for plain_kenken to be able to find a 
+  solution for a board with N = 6 because there are so many blocks to fill.
+
+When testing boards of a smaller scale (N = 4) with multiple solutions, both 
+  kenken and plain_kenken weer able to finish this time. The fact that the
+  board had fewer blocks to worry about ensured that plain_kenken could 
+  actually finish. However, kenken is still significantly faster than 
+  plain_kenken. As seen in Test #2, kenken had a user time of 0.008 seconds 
+  and a cpu time of 0.011 seconds. This was a bit slower than the results
+  of Test #1 because there were multiple solutions, but it was still a 
+  respectable time nonetheless. In Test #3, plain_kenken exhibited a user 
+  time of 0.010 seconds and a cpu time of 0.015 seconds. In comparison to 
+  kenken in Test #2, this was a 125% increase in user time and 136% increase
+  in the cpu time. plain_kenken was not able to compete with the efficiency
+  of kenken -- while I was performing Test #3, there was a noticable delay in 
+  how long it took for the results to get printed out as the entire test took 
+  nearly 2 seconds. Thankfully, all the tests were able to arrive at the 
+  correct solution (the solutions in Test #2 and Test #3 were printed in a 
+  different order, but I don't believe that matters).
+
+In conclusion, there is a noticeable difference in the performance between
+  kenken and plain_kenken. This is due to the fact that GNU Prolog finite 
+  domain solver is much more efficient than the predicates included in the 
+  gprolog API. With many calculations, there is a significant difference
+  in the overall performance.
+
+
+
+
+Test #1 - kenken, large board (N = 6)
+  Query: statistics, fd_set_vector_max(255), kenken_testcase(N,C), kenken(N,C,T).
+
+  Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            2 Kb        32765 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.006 sec       0.006 sec
+    system time       0.003 sec       0.003 sec
+    cpu    time       0.009 sec       0.009 sec
+    real   time     563.087 sec     563.087 sec
+
+  C = [11+[[1|1],[2|1]],/(2,[1|2],[1|3]),20*[[1|4],[2|4]],6*[[1|5],[1|6],[2|6],[3|6]],-(3,[2|2],[2|3]),/(3,[2|5],[3|5]),240*[[3|1],[3|2],[4|1],[4|2]],6*[[3|3],[3|4]],6*[[4|3],[5|3]],7+[[4|4],[5|4],[5|5]],30*[[4|5],[4|6]],6*[[5|1],[5|2]],9+[[5|6],[6|6]],8+[[6|1],[6|2],[6|3]],/(2,[6|4],[6|5])]
+  N = 6
+  T = [[5,6,3,4,1,2],[6,1,4,5,2,3],[4,5,2,3,6,1],[3,4,1,2,5,6],[2,3,6,1,4,5],[1,2,5,6,3,4]]
+
+
+Test #2 - kenken, smaller board (N = 4)
+  Query: statistics, kenken(
+    4,
+    [
+    +(6, [[1|1], [1|2], [2|1]]),
+    *(96, [[1|3], [1|4], [2|2], [2|3], [2|4]]),
+    -(1, [3|1], [3|2]),
+    -(1, [4|1], [4|2]),
+    +(8, [[3|3], [4|3], [4|4]]),
+    *(2, [[3|4]])
+    ],
+    T
+  ), write(T), nl, fail.
+
+  Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            3 Kb        32764 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.008 sec       0.002 sec
+    system time       0.003 sec       0.000 sec
+    cpu    time       0.011 sec       0.002 sec
+    real   time     764.616 sec     201.529 sec
+
+  [[1,2,3,4],[3,4,2,1],[4,3,1,2],[2,1,4,3]]
+  [[1,2,4,3],[3,4,2,1],[4,3,1,2],[2,1,3,4]]
+  [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
+  [[2,1,3,4],[3,4,2,1],[4,3,1,2],[1,2,4,3]]
+  [[2,1,4,3],[3,4,2,1],[4,3,1,2],[1,2,3,4]]
+  [[3,1,2,4],[2,4,3,1],[4,3,1,2],[1,2,4,3]]
+
+  no
+
+
+
+  Test #3 - plain_kenken,  smaller board (N = 4)
+    Query: statistics, plain_kenken(
+      4,
+      [
+      +(6, [[1|1], [1|2], [2|1]]),
+      *(96, [[1|3], [1|4], [2|2], [2|3], [2|4]]),
+      -(1, [3|1], [3|2]),
+      -(1, [4|1], [4|2]),
+      +(8, [[3|3], [4|3], [4|4]]),
+      *(2, [[3|4]])
+      ],
+      T
+    ), write(T), nl, fail.
+
+    Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            3 Kb        32764 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.010 sec       0.001 sec
+    system time       0.005 sec       0.001 sec
+    cpu    time       0.015 sec       0.002 sec
+    real   time     930.344 sec      37.388 sec
+
+  [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
+  [[3,1,2,4],[2,4,3,1],[4,3,1,2],[1,2,4,3]]
+  [[2,1,4,3],[3,4,2,1],[4,3,1,2],[1,2,3,4]]
+  [[2,1,3,4],[3,4,2,1],[4,3,1,2],[1,2,4,3]]
+  [[1,2,4,3],[3,4,2,1],[4,3,1,2],[2,1,3,4]]
+  [[1,2,3,4],[3,4,2,1],[4,3,1,2],[2,1,4,3]]
+
+  (1938 ms) no

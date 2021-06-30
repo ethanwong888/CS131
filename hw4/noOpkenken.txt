@@ -1,0 +1,224 @@
+Description of API for No-Op KenKen
+
+No-op Kenken is much harder to implement than the traditional Kenken because it
+  presents ambiguous constraints that do not specify which operation should be 
+  used to fit the constraint. The logic for solving a no-op Kenken puzzle is 
+  not all that different from solving a normal Kenken, but there are extra
+  steps that must be followed. The inputs will remain the same, but there 
+  must be an additional output in the form of a list of necessary operations.
+
+Inputs
+  - N, a nonnegative integer specifying the number of cells on each side of the KenKen square
+  - C, a list of numeric cage constraints that do not contain specific operations, only the target number
+
+Outputs
+  - T, a list of list of integers that satsify the puzzle. All the lists have length N. This represents the N×N grid
+  - X, a list containing operations that are used with the constraints to solve the puzzle 
+
+Behavior 
+  The behavior for no-op Kenken is almost identical to that of normal Kenken.
+  Inputs to no-op Kenken are mostly the same, except the constraints list does
+  not containt any specific operations that correspond with each constraint.
+
+  For a successful call to no-op Kenken (i.e. the puzzle was solved), the user 
+  should expect an output consisting of T and X. T would represent the numbers
+  used to fill up the Kenken board in the form of a list of lists. The first 
+  list would represent the first row of the Kenken board, the second list would
+  represent the second list of the Kenken board, etc. X would represent a list
+  of operations that correspond with each of the constraints. The first 
+  operation would correspond with the first constraint, the second operation
+  would correpond with the second constraint, etc. The user could either hit 
+  "Enter" or "Return" to approve of the provided answer, or hit ";" to 
+  request another answer. Either another answer will be displayed or a "no"
+  messaeg would get returned, indicating that there are no other valid answers.
+
+  For an unsuccessful call to the no-op Kenken (i.e. the puzzle could not be
+  solved), the user should expect a simple "no" response to their query. The 
+  user will just be brought back to the interpreter, where they can make 
+  another query if they would like.
+
+Implementation
+  While not asked to provide an implementation, I would like to say that a 
+  good implementation of no-op Kenken would likely be quite similar to the
+  normal Kenken. It would be wise to take advantage of the GNU Prolog Finite
+  Domain Solver because it proved to be much faster and more efficient based 
+  on the data and observations from "stats.txt". There would likely have to 
+  be a lot of trial and error where many combinations of operations are tested
+  in order to solve the problem, and my guess is that the implementation would
+  be significantly slower than normal Kenken, especially when N is large. 
+  Note: If there is a single block, then that would default to a '+' operation.
+
+Example
+  I will base the test case off of the sample test case provided in the spec.
+
+  noop_kenken_testcase(
+	4, 
+    [
+      (36, [1|1, 1|2, 2|2]),
+      (2, [1|3, 2|3]),
+      (3, [1|4, 2|4]),
+      (2, [2|1]),
+      (7, [3|1, 4|1, 4|2]),
+      (4, [4|3]),
+      (9, [3|2, 3|3, 3|4, 4|4])
+    ]
+  ).
+
+  Query - | ?- fd_set_vector_max(255), noop_kenken_testcase(N,C), noop_kenken(N,C,T,X).
+
+  Return value
+    T = [[3, 4, 2 ,1], [2, 3, 1, 4], [4, 1, 3, 2], [1, 2, 4, 3]]
+    X = [*, *, -, +, +, +, +]
+
+
+
+
+
+Statistics and Analysis from Multiple Tests on kenken and plain_kenken
+  (Test data at bottom of file)
+
+In order to test the speed at which kenken and plain_kenken run at, I used the
+  test cases provided at the bottom of the homework specification. Running the 
+  tests with the "statistics" keyword presented data detailing the efficiency 
+  and times for kenken and plain_kenken. 
+  (Note: For plain_kenken I was not able to test any boards with N > 4, as any 
+    values of N greater than 4 caused the computation to take forever so I 
+    had to abort them.)
+
+The overall conclusion is -- kenken operates much faster than plain_kenken, 
+  which was to be expected. plain_kenken had significantly worse performance
+  based on the "user time" and "cpu time" it took for each predicate to 
+  finish. For instance, in Test #1 kenken took 0.006 seconds to finish in user 
+  time, and 0.009 seconds to finish in cpu time. I tried to run a similar 
+  test case using an identical board and, and plain_kenken did not ever finish 
+  running (hence why you see no data for it). I am not entirely sure if this 
+  was because of a hardware issue due to my laptop being really old, but my 
+  guess is that it just takes forever for plain_kenken to be able to find a 
+  solution for a board with N = 6 because there are so many blocks to fill.
+
+When testing boards of a smaller scale (N = 4) with multiple solutions, both 
+  kenken and plain_kenken weer able to finish this time. The fact that the
+  board had fewer blocks to worry about ensured that plain_kenken could 
+  actually finish. However, kenken is still significantly faster than 
+  plain_kenken. As seen in Test #2, kenken had a user time of 0.008 seconds 
+  and a cpu time of 0.011 seconds. This was a bit slower than the results
+  of Test #1 because there were multiple solutions, but it was still a 
+  respectable time nonetheless. In Test #3, plain_kenken exhibited a user 
+  time of 0.010 seconds and a cpu time of 0.015 seconds. In comparison to 
+  kenken in Test #2, this was a 125% increase in user time and 136% increase
+  in the cpu time. plain_kenken was not able to compete with the efficiency
+  of kenken -- while I was performing Test #3, there was a noticable delay in 
+  how long it took for the results to get printed out as the entire test took 
+  nearly 2 seconds. Thankfully, all the tests were able to arrive at the 
+  correct solution (the solutions in Test #2 and Test #3 were printed in a 
+  different order, but I don't believe that matters).
+
+In conclusion, there is a noticeable difference in the performance between
+  kenken and plain_kenken. This is due to the fact that GNU Prolog finite 
+  domain solver is much more efficient than the predicates included in the 
+  gprolog API. With many calculations, there is a significant difference
+  in the overall performance.
+
+
+
+
+Test #1 - kenken, large board (N = 6)
+  Query: statistics, fd_set_vector_max(255), kenken_testcase(N,C), kenken(N,C,T).
+
+  Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            2 Kb        32765 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.006 sec       0.006 sec
+    system time       0.003 sec       0.003 sec
+    cpu    time       0.009 sec       0.009 sec
+    real   time     563.087 sec     563.087 sec
+
+  C = [11+[[1|1],[2|1]],/(2,[1|2],[1|3]),20*[[1|4],[2|4]],6*[[1|5],[1|6],[2|6],[3|6]],-(3,[2|2],[2|3]),/(3,[2|5],[3|5]),240*[[3|1],[3|2],[4|1],[4|2]],6*[[3|3],[3|4]],6*[[4|3],[5|3]],7+[[4|4],[5|4],[5|5]],30*[[4|5],[4|6]],6*[[5|1],[5|2]],9+[[5|6],[6|6]],8+[[6|1],[6|2],[6|3]],/(2,[6|4],[6|5])]
+  N = 6
+  T = [[5,6,3,4,1,2],[6,1,4,5,2,3],[4,5,2,3,6,1],[3,4,1,2,5,6],[2,3,6,1,4,5],[1,2,5,6,3,4]]
+
+
+Test #2 - kenken, smaller board (N = 4)
+  Query: statistics, kenken(
+    4,
+    [
+    +(6, [[1|1], [1|2], [2|1]]),
+    *(96, [[1|3], [1|4], [2|2], [2|3], [2|4]]),
+    -(1, [3|1], [3|2]),
+    -(1, [4|1], [4|2]),
+    +(8, [[3|3], [4|3], [4|4]]),
+    *(2, [[3|4]])
+    ],
+    T
+  ), write(T), nl, fail.
+
+  Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            3 Kb        32764 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.008 sec       0.002 sec
+    system time       0.003 sec       0.000 sec
+    cpu    time       0.011 sec       0.002 sec
+    real   time     764.616 sec     201.529 sec
+
+  [[1,2,3,4],[3,4,2,1],[4,3,1,2],[2,1,4,3]]
+  [[1,2,4,3],[3,4,2,1],[4,3,1,2],[2,1,3,4]]
+  [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
+  [[2,1,3,4],[3,4,2,1],[4,3,1,2],[1,2,4,3]]
+  [[2,1,4,3],[3,4,2,1],[4,3,1,2],[1,2,3,4]]
+  [[3,1,2,4],[2,4,3,1],[4,3,1,2],[1,2,4,3]]
+
+  no
+
+
+
+  Test #3 - plain_kenken,  smaller board (N = 4)
+    Query: statistics, plain_kenken(
+      4,
+      [
+      +(6, [[1|1], [1|2], [2|1]]),
+      *(96, [[1|3], [1|4], [2|2], [2|3], [2|4]]),
+      -(1, [3|1], [3|2]),
+      -(1, [4|1], [4|2]),
+      +(8, [[3|3], [4|3], [4|4]]),
+      *(2, [[3|4]])
+      ],
+      T
+    ), write(T), nl, fail.
+
+    Memory               limit         in use            free
+
+   trail  stack      16383 Kb            0 Kb        16383 Kb
+   cstr   stack      16384 Kb            0 Kb        16384 Kb
+   global stack      32767 Kb            3 Kb        32764 Kb
+   local  stack      16383 Kb            0 Kb        16383 Kb
+   atom   table      32768 atoms      1796 atoms     30972 atoms
+
+  Times              since start      since last
+
+    user   time       0.010 sec       0.001 sec
+    system time       0.005 sec       0.001 sec
+    cpu    time       0.015 sec       0.002 sec
+    real   time     930.344 sec      37.388 sec
+
+  [[3,2,4,1],[1,4,2,3],[4,3,1,2],[2,1,3,4]]
+  [[3,1,2,4],[2,4,3,1],[4,3,1,2],[1,2,4,3]]
+  [[2,1,4,3],[3,4,2,1],[4,3,1,2],[1,2,3,4]]
+  [[2,1,3,4],[3,4,2,1],[4,3,1,2],[1,2,4,3]]
+  [[1,2,4,3],[3,4,2,1],[4,3,1,2],[2,1,3,4]]
+  [[1,2,3,4],[3,4,2,1],[4,3,1,2],[2,1,4,3]]
+
+  (1938 ms) no
