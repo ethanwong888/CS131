@@ -1,0 +1,54 @@
+After-action Report
+    I'm going to be honest with you here. Ocaml was very confusing and 
+difficult for me to pick up. This was one of the most painful assignments I 
+have ever done for a computer science course and I can only pray I did decently
+after all the time I put into it. Problems 1 and 2 took me a little while to 
+think over before I finally got them correct. Along the way I discovered some 
+new useful operations such as the @ operator and the fst and snd operations. 
+I realized after a while that it would be better to split the solution into 
+two functions instead of trying to cram everything into one. This generally 
+helped me in terms of organization and allowed me to finish these two problems
+without too much pain.
+    For Problem 3 and Problem 4, I really had to take time and study the 
+discussion slides for week 2 and week 3. My solution for make_matcher 
+served as a foundation for my solution for make_parser. I did not 
+actually use make_matcher in my solution for number 4, but I used a lot
+of similar concepts in my solution. make_parser had to be a bit more 
+complex because not only did there have to be an acceptable match, but
+there also had to be an acceptor that allowed the match. To start off 
+with, make_parser used a modified version of make_matcher. The point of 
+this first function was just to verify whether or not that parse tree 
+could actually be created. If a parse tree could not be created, then there
+would not really be any point to trying to parse at all. It is important 
+to note that this modified version of make_matcher had to accurately keep 
+track of any nonterminals that were reached. This was not necessarily a 
+requirement in problem 3. The job of the acceptor was quite simple overall. 
+It was responsible for taking in a fragment, or frag, and returning the 
+corresponding path. Later on in the implementation for maker_parser, I used
+a recursive function to generate a tree that tried to match the structure of 
+the ones that Professor Eggert drew out during Zoom lectures. The actual 
+process of creating the parse tree was the most difficult and complex part 
+of this assignment in my opinion. I had to go to office hours and tutoring 
+to find a good way to tie all the functions together in a way that was not 
+too horrendous. There were a lot of match statements but the final result
+is actually a lot prettier than what I had at first, miraculously.
+    I believe that my implementation, just like most other students, probably 
+has a lot of weaknesses involved. The first weakness that I identified after
+finishing this assignment was that my code was probably quite inefficient.
+Based on what Professor Eggert said in class, there are many more efficient
+ways to use acceptors. I believe the way that my acceptor is used in this 
+assignment probably resembles that of a beginner, which I am. Overall I think
+that the make_matcher and make_parser functions can probably be written to be 
+more elegant and faster. However, I tried my best with the knowledge that I have.
+Another weakness of my implementations is that the parser may not necessarily 
+return the parse tree that a user may expect. For example, the parser will go 
+from left to right when it is looking through all the symbols and expressions and 
+whatnot. This can be problematic because in many scenarios there can be multiple 
+possible parse trees, depending on how ambiguous or non-ambiguous the provided
+grammar is. For my implementation, I believe that my parser will return the same
+parse tree every time -- the one that shows up first according to the 
+algorithm. While I do not think this is terrible, it can definitely be seen as a
+weakness of my code. There are likely many other weaknesses that I am not aware 
+of in my implemetations. These were just weaknesses I found with my testing. I 
+admit that my knowledge of grammars is not extensive enough to think of other
+scenarios in which my code will not work well.

@@ -1,0 +1,12 @@
+Brief after-action report
+
+This assignment was very confusing because I was trying to work on it before we had lecture or discussion. I will admit that
+I had no idea what I was doing until the discussion on Friday. The slides helped me a lot and I was able to get through the
+first few questions in the assignment pretty easily after hearing from the TA. I referenced the slides frequently while w
+working on the questions and used other resources that the TA recommended such as OCaml tutorials.
+
+For Question 7, I had a pretty difficult time and had to attend some Office Hours and tutoring sessions to figure it out.
+At first I tried to solve everything the problem asked for in one function, but I quickly found myself getting confused.
+In the end I decided to break up the larger problem into many smaller parts. This helped me not get confused because I
+could tackle one problem at a time. As seen in the comments in my code, there are many subsections before I finally
+piece everything together in my final solution.
